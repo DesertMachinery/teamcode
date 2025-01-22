@@ -1,83 +1,49 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.*;
 
 @Autonomous
 public class Automomouse extends LinearOpMode {
 
-    private DcMotor LeftMotor;
-    private DcMotor RightMotor;
-
     @Override
     public void runOpMode() throws InterruptedException {
-        RightMotor = hardwareMap.get(DcMotor.class, "Right");
-        LeftMotor = hardwareMap.get(DcMotor.class, "Left");
+        Arm arm = new Arm(hardwareMap);
+        Elevator elevator = new Elevator(hardwareMap);
+        Claw claw = new Claw(hardwareMap);
 
-        LeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        RightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        LeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double armState = 0;
 
         waitForStart();
 
         while(opModeIsActive()) {
-            double leftEncoder = LeftMotor.getCurrentPosition();
-            double rightEncoder = RightMotor.getCurrentPosition();
+            telemetry.addData("arm pose", arm.getArmPose());
+            telemetry.update();
+elevator.moveToPose(0.1);
 
-            MotorLeft(0.5, 30, 2000);
 
-        }
-    }
-    public void MotorForward(double power, int pos, long time) {
-        RightMotor.setTargetPosition(pos);
-        RightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftMotor.setTargetPosition(pos);
-        LeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RightMotor.setPower(power);
-        LeftMotor.setPower(power);
 
-        sleep(time);
-    }
-    public void MotorBackward(double speed, int pos, long time) {
-        RightMotor.setTargetPosition(pos);
-        RightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftMotor.setTargetPosition(pos);
-        LeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RightMotor.setPower(-speed);
-        LeftMotor.setPower(-speed);
+            if(gamepad1.x){
+                armState = 0.96;
+            }
 
-        sleep(time);
-    }
-    public void MotorRight(double speed, int pos, long time) {
-        RightMotor.setTargetPosition(pos);
-        RightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftMotor.setTargetPosition(pos);
-        LeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RightMotor.setPower(speed);
-        LeftMotor.setPower(-speed);
+            if(gamepad1.left_bumper){
+                armState = 0.7;
+            }
 
-        sleep(time);
-    }
-    public void MotorLeft(double speed, int pos, long time) {
-        RightMotor.setTargetPosition(pos);
-        RightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftMotor.setTargetPosition(pos);
-        LeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RightMotor.setPower(-speed);
-        LeftMotor.setPower(speed);
+            if (gamepad1.right_bumper){
+                claw.openClaw();
+            }
 
-        sleep(time);
-    }
-    public void MotorStop() {
-        RightMotor.setPower(0);
-        LeftMotor.setPower(0);
+            arm.moveToPose(armState);
+        } //9609
     }
 
 }
