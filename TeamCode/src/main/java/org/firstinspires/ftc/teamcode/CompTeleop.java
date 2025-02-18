@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.*;
+
+import java.util.Timer;
 
 @TeleOp
 public class CompTeleop extends LinearOpMode {
@@ -14,18 +15,20 @@ public class CompTeleop extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         Mechanum mechanum = new Mechanum(hardwareMap);
-        Elevator elevator = new Elevator(hardwareMap);
         Claw claw = new Claw(hardwareMap);
         Arm arm = new Arm(hardwareMap);
+        VirtualFourBar virtualFourBar = new VirtualFourBar(hardwareMap);
 
         double armState = 0;
-        double elevatorState = 0;
 
         boolean clawToggle = true;
         boolean collectToggle = true;
 
         ElapsedTime collectTimer = new ElapsedTime();
+        ElapsedTime goDownTimer = new ElapsedTime();
 
+        boolean prepereCollectDebounce = true;
+        boolean goDown = false;
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -39,34 +42,48 @@ public class CompTeleop extends LinearOpMode {
             }
 
             // prepare collect
-            if (gamepad1.right_bumper) {
+            if (gamepad1.dpad_up) {
                 claw.openClaw();
-                elevatorState = Elevator.prepCollectPose;
+                virtualFourBar.moveToPose(VirtualFourBar.sampleIntake);
+
+                if(prepereCollectDebounce){
+                    prepereCollectDebounce = false;
+                    goDown = true;
+
+                    goDownTimer.reset();
+                }
+            }
+            else {
+                prepereCollectDebounce = true;
+            }
+
+            if(goDownTimer.seconds() > 0.5 && goDown){
+                armState = Arm.goDownPose;
+                goDown = false;
+            }
+
+            if (armState == Arm.goDownPose && arm.getArmPose() > Arm.goDownPose ){
                 armState = Arm.prepCollectPose;
             }
 
             //collect
-            if (gamepad1.left_bumper) {
+            if (gamepad1.dpad_down) {
                 if(collectToggle){
                     collectToggle = false;
 
-                    elevatorState = Elevator.collectPose;
                     armState = Arm.collectPose;
                     claw.openClaw();
+                    virtualFourBar.moveToPose(VirtualFourBar.sampleIntake);
                 }
-            }
-            else {
+            } else {
                 if(!collectToggle){
                     claw.closeClaw();
                     collectTimer.reset();
 
-                    while (collectTimer.seconds() < 0.3){
+                    while (collectTimer.seconds() < 1){
 
                     }
-                    collectTimer.reset();
-
-                    elevatorState = Elevator.prepCollectPose;
-                    armState = Arm.prepCollectPose;
+                    armState = Arm.postCollectPose;
                 }
                 collectToggle = true;
             }
@@ -86,22 +103,20 @@ public class CompTeleop extends LinearOpMode {
                 clawToggle = true;
             }
 
-            //hold
-            if (gamepad1.cross) {
-                armState = Arm.ClosedArm;
-                elevatorState = Elevator.ClosedElevator;
+            if (gamepad1.left_bumper) {
+                armState = Arm.prepSpec;
+                virtualFourBar.moveToPose(VirtualFourBar.chamber);
             }
 
-            //upper basket
             if (gamepad1.left_trigger > 0.05) {
-                armState = Arm.highBasket;
-                elevatorState = Elevator.highBasket;
-                claw.closeClaw();
+                armState = Arm.scoreSpec;
+                virtualFourBar.moveToPose(VirtualFourBar.chamber);
             }
 
-
-            elevator.moveToPose(elevatorState);
-            arm.moveToPose(armState);
+            if(gamepad1.right_bumper){
+                armState = Arm.collectSpecimen;
+                virtualFourBar.moveToPose(VirtualFourBar.specPick);
+            }
 
             if (gamepad1.right_trigger > 0.05) {
                 mechanum.drive(
@@ -117,8 +132,10 @@ public class CompTeleop extends LinearOpMode {
             }
 
 
+            arm.moveToPose(armState);
+
+
             telemetry.addData("arm pose", arm.getArmPose());
-            telemetry.addData("elevator pose", elevator.getElevatorPose());
 
             telemetry.addData("Status", "Running");
             telemetry.update();

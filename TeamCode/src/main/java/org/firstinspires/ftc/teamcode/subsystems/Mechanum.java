@@ -69,4 +69,11 @@ public class Mechanum {
     public void resetRotation(){
         imu.resetYaw();
     }
+
+    public void stop() {
+        frontLeftMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backRightMotor.setPower(0);
+    }
 }

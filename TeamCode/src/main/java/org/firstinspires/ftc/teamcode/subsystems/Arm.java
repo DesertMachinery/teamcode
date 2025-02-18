@@ -7,13 +7,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Arm {
-
     private final DcMotorEx armMotor;
 
-    public static double collectPose = 0.9783;
-    public static double prepCollectPose = 0.9;
+    public static double collectPose = 0.95;
+    public static double goDownPose = 0.8;
+    public static double prepCollectPose = 0.85;
+    public static double postCollectPose = 0.81;
     public static double ClosedArm = 0.1;
-    public static double highBasket = 0.4532;
+    public static double collectSpecimen = 0.5505;
+    public static double prepSpec = 0.5179;
+    public static double scoreSpec = 0.6091;
 
 
 
@@ -50,7 +53,7 @@ public class Arm {
         // sum of all error over time
         integralSum = integralSum + (error * timer.seconds());
 
-        double out = (0.03 * error) + (0.0007 * derivative);
+        double out = (0.01 * error) + (0.0002 * derivative);
 
         armMotor.setPower(out);
 

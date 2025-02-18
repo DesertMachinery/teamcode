@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.VirtualFourBar;
 
 @TeleOp
-public class test extends LinearOpMode {
+public class testPose extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -21,8 +21,8 @@ public class test extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
-//        virtualFourBar.moveToPose(0.5);
-//            arm.moveToPose(0.92);
+        virtualFourBar.moveToPose(0.5);
+            arm.moveToPose(0.92);
             telemetry.addData("arm pose", arm.getArmPose());
 
             telemetry.update();

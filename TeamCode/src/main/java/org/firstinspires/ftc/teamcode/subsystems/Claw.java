@@ -9,7 +9,7 @@ public class Claw {
 
     public static double closedPose = 1;
 
-    public static double openPose = 0.33;
+    public static double openPose = 0.44;
 
     public Claw(HardwareMap hardwareMap){
         servoClaw = hardwareMap.get(Servo.class, "Claw");
