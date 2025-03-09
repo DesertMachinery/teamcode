@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
+@Config
 public class Claw {
 
     Servo servoClaw;
@@ -15,6 +16,7 @@ public class Claw {
         servoClaw = hardwareMap.get(Servo.class, "Claw");
     }
 
+    @SuppressWarnings("unused")
     public double getPos() { return servoClaw.getPosition(); }
 
     public void closeClaw(){

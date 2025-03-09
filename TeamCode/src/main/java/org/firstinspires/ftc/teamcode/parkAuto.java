@@ -17,16 +17,15 @@ public class parkAuto extends LinearOpMode {
 
         ElapsedTime elapsedTime = new ElapsedTime();
 
+        claw.closeClaw();
+
         waitForStart();
 
         elapsedTime.reset();
-        while (elapsedTime.seconds() < 0.1){
-            mechanum.drive(0,0.3,0);
-        }
 
         while(opModeIsActive()) {
             if(elapsedTime.seconds() < 3){
-                mechanum.drive(0.5,0,0);
+                mechanum.drive(0.5,-0.1,0);
             }
 
 //            arm.moveToPose(Arm.ClosedArm);

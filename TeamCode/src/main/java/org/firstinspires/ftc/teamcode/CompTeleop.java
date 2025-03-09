@@ -6,9 +6,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.*;
 
-import java.util.Timer;
-
 @TeleOp
+@SuppressWarnings("unused")
 public class CompTeleop extends LinearOpMode {
 
     @Override
@@ -17,9 +16,13 @@ public class CompTeleop extends LinearOpMode {
         Mechanum mechanum = new Mechanum(hardwareMap);
         Claw claw = new Claw(hardwareMap);
         Arm arm = new Arm(hardwareMap);
-        VirtualFourBar virtualFourBar = new VirtualFourBar(hardwareMap);
+        Elbow elbow = new Elbow(hardwareMap);
+        Wrist wrist = new Wrist(hardwareMap);
+
 
         double armState = 0;
+        double elbowState = 0;
+        double wristState = 0;
 
         boolean clawToggle = true;
         boolean collectToggle = true;
@@ -27,11 +30,13 @@ public class CompTeleop extends LinearOpMode {
         ElapsedTime collectTimer = new ElapsedTime();
         ElapsedTime goDownTimer = new ElapsedTime();
 
-        boolean prepereCollectDebounce = true;
+        boolean prepareCollectDebounce = true;
         boolean goDown = false;
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
+        claw.closeClaw();
 
         waitForStart();
 
@@ -43,18 +48,21 @@ public class CompTeleop extends LinearOpMode {
 
             // prepare collect
             if (gamepad1.dpad_up) {
+                arm.moveToPose(Arm.prepCollectPose);
+                elbow.moveToPose(Elbow.collectSample);
+                wrist.moveToPose(Wrist.collectSample);
                 claw.openClaw();
-                virtualFourBar.moveToPose(VirtualFourBar.sampleIntake);
 
-                if(prepereCollectDebounce){
-                    prepereCollectDebounce = false;
+
+                if(prepareCollectDebounce){
+                    prepareCollectDebounce = false;
                     goDown = true;
 
                     goDownTimer.reset();
                 }
             }
             else {
-                prepereCollectDebounce = true;
+                prepareCollectDebounce = true;
             }
 
             if(goDownTimer.seconds() > 0.5 && goDown){
@@ -72,8 +80,10 @@ public class CompTeleop extends LinearOpMode {
                     collectToggle = false;
 
                     armState = Arm.collectPose;
+                    elbowState = Elbow.collectSample;
+                    wristState = Wrist.collectSample;
                     claw.openClaw();
-                    virtualFourBar.moveToPose(VirtualFourBar.sampleIntake);
+
                 }
             } else {
                 if(!collectToggle){
@@ -81,7 +91,7 @@ public class CompTeleop extends LinearOpMode {
                     collectTimer.reset();
 
                     while (collectTimer.seconds() < 1){
-
+                        opModeIsActive();
                     }
                     armState = Arm.postCollectPose;
                 }
@@ -103,19 +113,31 @@ public class CompTeleop extends LinearOpMode {
                 clawToggle = true;
             }
 
+            if (gamepad1.x) {
+                armState = Arm.armLowBasket;
+                elbowState = Elbow.elbowLowBasket;
+                wristState = Wrist.scoreSample;
+            }
+
             if (gamepad1.left_bumper) {
                 armState = Arm.prepSpec;
-                virtualFourBar.moveToPose(VirtualFourBar.chamber);
+                elbowState = Elbow.scoreSpecimen;
+                wristState = Wrist.prepScoreSpecimen;
+
             }
 
             if (gamepad1.left_trigger > 0.05) {
                 armState = Arm.scoreSpec;
-                virtualFourBar.moveToPose(VirtualFourBar.chamber);
+                elbowState = Elbow.scoreSpecimen;
+                wristState = Wrist.scoreSpecimen;
+
             }
 
             if(gamepad1.right_bumper){
                 armState = Arm.collectSpecimen;
-                virtualFourBar.moveToPose(VirtualFourBar.specPick);
+                elbowState = Elbow.collectSpecimen;
+                wristState = Wrist.collectSpecimen;
+
             }
 
             if (gamepad1.right_trigger > 0.05) {
@@ -133,6 +155,9 @@ public class CompTeleop extends LinearOpMode {
 
 
             arm.moveToPose(armState);
+            elbow.moveToPose(elbowState);
+            wrist.moveToPose(wristState);
+
 
 
             telemetry.addData("arm pose", arm.getArmPose());

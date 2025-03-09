@@ -1,22 +1,25 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+@Config
 public class Arm {
     private final DcMotorEx armMotor;
 
     public static double collectPose = 0.95;
     public static double goDownPose = 0.8;
-    public static double prepCollectPose = 0.85;
+    public static double prepCollectPose = 0.91;
     public static double postCollectPose = 0.81;
     public static double ClosedArm = 0.1;
     public static double collectSpecimen = 0.5505;
     public static double prepSpec = 0.5179;
     public static double scoreSpec = 0.6091;
+    public static double armLowBasket = 0.1 ;
+
 
 
 
@@ -34,6 +37,7 @@ public class Arm {
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    @SuppressWarnings("unused")
     public void setPower(double power){
         armMotor.setPower(power);
     }
@@ -53,7 +57,7 @@ public class Arm {
         // sum of all error over time
         integralSum = integralSum + (error * timer.seconds());
 
-        double out = (0.01 * error) + (0.0002 * derivative);
+        double out = (0.015 * error) + (0.0003 * derivative);
 
         armMotor.setPower(out);
 

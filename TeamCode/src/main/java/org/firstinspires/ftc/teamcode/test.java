@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
-import org.firstinspires.ftc.teamcode.subsystems.VirtualFourBar;
+import org.firstinspires.ftc.teamcode.subsystems.Elbow;
 
 @TeleOp
 public class test extends LinearOpMode {
@@ -12,7 +12,9 @@ public class test extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Arm arm = new Arm(hardwareMap);
-        VirtualFourBar virtualFourBar = new VirtualFourBar(hardwareMap);
+        Elbow elbow = new Elbow(hardwareMap);
+
+
         //Claw claw = new Claw(hardwareMap);
         //Elevator elevator = new Elevator(hardwareMap);
 
@@ -24,7 +26,11 @@ public class test extends LinearOpMode {
 //        virtualFourBar.moveToPose(0.5);
 //            arm.moveToPose(0.92);
             telemetry.addData("arm pose", arm.getArmPose());
+            telemetry.addData("elbow pose", elbow.getElbowPose());
 
+
+
+            //
             telemetry.update();
 
         }
