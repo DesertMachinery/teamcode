@@ -15,6 +15,7 @@ public class Elbow {
     public static double scoreSpecimen = 0.1;
     public static double collectSpecimen = 0.5505;
     public static double elbowLowBasket = 0.1;
+    public static double closedElbow = 0.1;
 
 
     private final double maxPose = 921;

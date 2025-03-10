@@ -15,6 +15,8 @@ public class specimenAuto extends LinearOpMode {
         Arm arm = new Arm(hardwareMap);
         Claw claw = new Claw(hardwareMap);
         Mechanum mechanum = new Mechanum(hardwareMap);
+        Elbow elbow = new Elbow(hardwareMap);
+        Wrist wrist = new Wrist(hardwareMap);
 
 
         ElapsedTime elapsedTime = new ElapsedTime();
@@ -29,6 +31,8 @@ public class specimenAuto extends LinearOpMode {
         while(elapsedTime.seconds() < 2) {
 
             arm.moveToPose(Arm.prepSpec);
+            elbow.moveToPose(Elbow.scoreSpecimen);
+            wrist.moveToPose(Wrist.prepScoreSpecimen);
             opModeIsActive();
         }
 
@@ -36,6 +40,8 @@ public class specimenAuto extends LinearOpMode {
         while (elapsedTime.seconds()<1){
             mechanum.drive(0, 0.3, 0);
             arm.moveToPose(Arm.prepSpec);
+            elbow.moveToPose(Elbow.scoreSpecimen);
+            wrist.moveToPose(Wrist.prepScoreSpecimen);
             opModeIsActive();
         }
 
@@ -44,6 +50,8 @@ public class specimenAuto extends LinearOpMode {
         elapsedTime.reset();
         while (elapsedTime.seconds() < 0.5){
             arm.moveToPose(Arm.scoreSpec);
+            elbow.moveToPose(Elbow.scoreSpecimen);
+            wrist.moveToPose(Wrist.scoreSpecimen);
             opModeIsActive();
         }
 
@@ -62,11 +70,15 @@ public class specimenAuto extends LinearOpMode {
             opModeIsActive();
 
             arm.moveToPose(Arm.collectSpecimen);
+            elbow.moveToPose(Elbow.collectSpecimen);
+            wrist.moveToPose(Wrist.collectSpecimen);
         }
 
         elapsedTime.reset();
         while (elapsedTime.seconds() < 0.2){
             arm.moveToPose(Arm.ClosedArm);
+            elbow.moveToPose(Elbow.closedElbow);
+            wrist.moveToPose(Wrist.closedWrist);
             opModeIsActive();
         }
 
@@ -80,6 +92,8 @@ public class specimenAuto extends LinearOpMode {
 
         while(opModeIsActive()) {
             arm.moveToPose(Arm.ClosedArm);
+            elbow.moveToPose(Elbow.closedElbow);
+            wrist.moveToPose(Wrist.closedWrist);
             mechanum.drive(0.6,-0.1,0);
         }
     }
