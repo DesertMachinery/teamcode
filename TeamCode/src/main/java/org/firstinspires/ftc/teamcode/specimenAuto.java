@@ -16,7 +16,6 @@ public class specimenAuto extends LinearOpMode {
         Claw claw = new Claw(hardwareMap);
         Mechanum mechanum = new Mechanum(hardwareMap);
         Elbow elbow = new Elbow(hardwareMap);
-        Wrist wrist = new Wrist(hardwareMap);
 
 
         ElapsedTime elapsedTime = new ElapsedTime();
@@ -32,7 +31,6 @@ public class specimenAuto extends LinearOpMode {
 
             arm.moveToPose(Arm.prepSpec);
             elbow.moveToPose(Elbow.scoreSpecimen);
-            wrist.moveToPose(Wrist.prepScoreSpecimen);
             opModeIsActive();
         }
 
@@ -41,7 +39,6 @@ public class specimenAuto extends LinearOpMode {
             mechanum.drive(0, 0.3, 0);
             arm.moveToPose(Arm.prepSpec);
             elbow.moveToPose(Elbow.scoreSpecimen);
-            wrist.moveToPose(Wrist.prepScoreSpecimen);
             opModeIsActive();
         }
 
@@ -51,7 +48,6 @@ public class specimenAuto extends LinearOpMode {
         while (elapsedTime.seconds() < 0.5){
             arm.moveToPose(Arm.scoreSpec);
             elbow.moveToPose(Elbow.scoreSpecimen);
-            wrist.moveToPose(Wrist.scoreSpecimen);
             opModeIsActive();
         }
 
@@ -71,14 +67,12 @@ public class specimenAuto extends LinearOpMode {
 
             arm.moveToPose(Arm.collectSpecimen);
             elbow.moveToPose(Elbow.collectSpecimen);
-            wrist.moveToPose(Wrist.collectSpecimen);
         }
 
         elapsedTime.reset();
         while (elapsedTime.seconds() < 0.2){
             arm.moveToPose(Arm.ClosedArm);
             elbow.moveToPose(Elbow.closedElbow);
-            wrist.moveToPose(Wrist.closedWrist);
             opModeIsActive();
         }
 
@@ -93,7 +87,6 @@ public class specimenAuto extends LinearOpMode {
         while(opModeIsActive()) {
             arm.moveToPose(Arm.ClosedArm);
             elbow.moveToPose(Elbow.closedElbow);
-            wrist.moveToPose(Wrist.closedWrist);
             mechanum.drive(0.6,-0.1,0);
         }
     }

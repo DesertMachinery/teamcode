@@ -17,8 +17,6 @@ public class CompTeleop extends LinearOpMode {
         Claw claw = new Claw(hardwareMap);
         Arm arm = new Arm(hardwareMap);
         Elbow elbow = new Elbow(hardwareMap);
-        Wrist wrist = new Wrist(hardwareMap);
-
 
         double armState = 0;
         double elbowState = 0;
@@ -50,9 +48,7 @@ public class CompTeleop extends LinearOpMode {
             if (gamepad1.dpad_up) {
                 arm.moveToPose(Arm.prepCollectPose);
                 elbow.moveToPose(Elbow.collectSample);
-                wrist.moveToPose(Wrist.collectSample);
                 claw.openClaw();
-
 
                 if(prepareCollectDebounce){
                     prepareCollectDebounce = false;
@@ -81,7 +77,6 @@ public class CompTeleop extends LinearOpMode {
 
                     armState = Arm.collectPose;
                     elbowState = Elbow.collectSample;
-                    wristState = Wrist.collectSample;
                     claw.openClaw();
 
                 }
@@ -116,28 +111,21 @@ public class CompTeleop extends LinearOpMode {
             if (gamepad1.x) {
                 armState = Arm.armLowBasket;
                 elbowState = Elbow.elbowLowBasket;
-                wristState = Wrist.scoreSample;
             }
 
             if (gamepad1.left_bumper) {
                 armState = Arm.prepSpec;
                 elbowState = Elbow.scoreSpecimen;
-                wristState = Wrist.prepScoreSpecimen;
-
             }
 
             if (gamepad1.left_trigger > 0.05) {
                 armState = Arm.scoreSpec;
                 elbowState = Elbow.scoreSpecimen;
-                wristState = Wrist.scoreSpecimen;
-
             }
 
             if(gamepad1.right_bumper){
                 armState = Arm.collectSpecimen;
                 elbowState = Elbow.collectSpecimen;
-                wristState = Wrist.collectSpecimen;
-
             }
 
             if (gamepad1.right_trigger > 0.05) {
@@ -153,12 +141,8 @@ public class CompTeleop extends LinearOpMode {
                         Math.pow(gamepad1.right_stick_x, 3));
             }
 
-
             arm.moveToPose(armState);
             elbow.moveToPose(elbowState);
-            wrist.moveToPose(wristState);
-
-
 
             telemetry.addData("arm pose", arm.getArmPose());
 
