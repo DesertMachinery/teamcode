@@ -11,10 +11,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Elbow {
     private final DcMotorEx elbowMotor;
 
-    public static double collectSample = 0.7;
-    public static double scoreSpecimen = 0.1;
-    public static double collectSpecimen = 0.0307;
-    public static double elbowLowBasket = 0.1;
+    public static double collectSample = 0.72;
+
+    public static double collectSpecimen = 0.0421;
+    public static double prepSpec = 0.3;
+    public static double scoreSpecimen = 0.13;
+
+    public static double elbowLowBasket = 0.68;
+
     public static double closedElbow = 0.1;
 
     public static double KP = 0.007;
@@ -34,7 +38,7 @@ public class Elbow {
     public Elbow(HardwareMap hardwareMap) {
         elbowMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "Elbow");
 
-        elbowMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        elbowMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         elbowMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elbowMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -66,6 +70,13 @@ public class Elbow {
 
         double out = (KP * error) + (KI * integralSum) + (KD * derivative);
 
+        if(out > 0.6){
+            out = 0.6;
+        }
+
+        if (out < -0.6){
+            out = -0.6;
+        }
         elbowMotor.setPower(out);
 
         lastError = error;

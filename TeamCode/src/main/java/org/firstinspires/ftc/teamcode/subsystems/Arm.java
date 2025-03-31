@@ -10,19 +10,23 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Arm {
     private final DcMotorEx armMotor;
 
-    public static double collectPose = 0.86;
-    public static double goDownPose = 0.8;
-    public static double prepCollectPose = 0.833;
-    public static double postCollectPose = 0.71;
+    public static double prepCollectSample = 0.833;
+    public static double goDownPose = 0.75;
+    public static double collectSample = 0.88;
+    public static double postCollectSample = 0.8;
+
+
     public static double ClosedArm = 0.1;
-    public static double collectSpecimen = 0.605;
-    public static double prepSpec = 0.5179;
-    public static double scoreSpec = 0.6091;
-    public static double armLowBasket = 0.1 ;
+
+    public static double collectSpecimen = 0.49;
+    public static double prepSpec = 0.19;
+    public static double scoreSpec = 0.27;
+
+    public static double armLowBasket = 0.39;
 
     public static double KP = 0.025;
     public static double KI = 0;
-    public static double KD = 0.00065;
+    public static double KD = 0.0004;
 
 
 
@@ -68,6 +72,16 @@ public class Arm {
 
         double out = (KP * error) + (KI * integralSum) + (KD * derivative);
 
+        if(out > 0.6){
+            out = 0.6;
+
+
+        }
+
+        if (out < -0.6){
+            out = -0.6;
+        }
+
         armMotor.setPower(out);
 
         lastError = error;
@@ -75,5 +89,9 @@ public class Arm {
     }
     public double getArmPose() {
         return armMotor.getCurrentPosition() / maxPose;
+    }
+
+    public double getArmVel(){
+        return armMotor.getVelocity()/1992.6*360;
     }
 }

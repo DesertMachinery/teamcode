@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -27,18 +27,18 @@ public class specimenAuto extends LinearOpMode {
 
         elapsedTime.reset();
 
-        while(elapsedTime.seconds() < 2) {
+        while(elapsedTime.seconds() < 0.5) {
 
             arm.moveToPose(Arm.prepSpec);
-            elbow.moveToPose(Elbow.scoreSpecimen);
+            elbow.moveToPose(Elbow.prepSpec);
             opModeIsActive();
         }
 
         elapsedTime.reset();
-        while (elapsedTime.seconds()<1){
+        while (elapsedTime.seconds()<4){
             mechanum.drive(0, 0.3, 0);
             arm.moveToPose(Arm.prepSpec);
-            elbow.moveToPose(Elbow.scoreSpecimen);
+            elbow.moveToPose(Elbow.prepSpec);
             opModeIsActive();
         }
 
@@ -51,23 +51,10 @@ public class specimenAuto extends LinearOpMode {
             opModeIsActive();
         }
 
-        elapsedTime.reset();
-        while (elapsedTime.seconds() < 0.4){
-            mechanum.drive(0, -0.2, 0);
-            opModeIsActive();
-        }
-
         opModeIsActive();
 
         claw.openClaw();
 
-        elapsedTime.reset();
-        while (elapsedTime.seconds() < 0.4){
-            opModeIsActive();
-
-            arm.moveToPose(Arm.collectSpecimen);
-            elbow.moveToPose(Elbow.collectSpecimen);
-        }
 
         elapsedTime.reset();
         while (elapsedTime.seconds() < 0.2){
@@ -79,15 +66,21 @@ public class specimenAuto extends LinearOpMode {
         elapsedTime.reset();
         while (elapsedTime.seconds() < 0.5){
             opModeIsActive();
-            mechanum.drive(0.6,-0.1,0);
+            mechanum.drive(0.6,-0.4,0);
         }
 
-        mechanum.stop();
+        elapsedTime.reset();
+        while (elapsedTime.seconds() < 2){
+            opModeIsActive();
+            mechanum.drive(0.6,-0.4,0);
+            arm.moveToPose(0.1);
+            elbow.moveToPose(0.1);
+        }
 
         while(opModeIsActive()) {
-            arm.moveToPose(Arm.ClosedArm);
-            elbow.moveToPose(Elbow.closedElbow);
-            mechanum.drive(0.6,-0.1,0);
+            arm.moveToPose(0);
+            elbow.moveToPose(0);
+            mechanum.drive(0.6,-0.4,0);
         }
     }
 
