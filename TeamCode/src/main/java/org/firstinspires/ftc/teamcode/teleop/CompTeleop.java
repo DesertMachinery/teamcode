@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.auto.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.*;
 
 @TeleOp
@@ -16,7 +20,7 @@ public class CompTeleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Mechanum mechanum = new Mechanum(hardwareMap);
+        MecanumDrive mechanum = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
         Claw claw = new Claw(hardwareMap);
         Arm arm = new Arm(hardwareMap);
         Elbow elbow = new Elbow(hardwareMap);
@@ -45,7 +49,7 @@ public class CompTeleop extends LinearOpMode {
         while (opModeIsActive()) {
 
             if (gamepad1.options) {
-                mechanum.resetRotation();
+                mechanum.localizer.setPose(new Pose2d(mechanum.localizer.getPose().position, 0));
             }
 
             // prepare collect
@@ -122,16 +126,20 @@ public class CompTeleop extends LinearOpMode {
             }
 
             if (gamepad1.right_trigger > 0.05) {
-                mechanum.drive(
-                        Math.pow(gamepad1.left_stick_x, 3) * 0.25,
-                        Math.pow(-gamepad1.left_stick_y, 3) * 0.25,
-                        Math.pow(gamepad1.right_stick_x, 3) * 0.15);
+                mechanum.setDrivePowers(
+                        new PoseVelocity2d(new Vector2d(
+                                Math.pow(gamepad1.left_stick_x, 3) * 0.25,
+                                Math.pow(-gamepad1.left_stick_y, 3) * 0.25),
+                                Math.pow(gamepad1.right_stick_x, 3) * 0.15));
+
+
             }
             else {
-                mechanum.drive(
-                        Math.pow(gamepad1.left_stick_x, 3),
-                        Math.pow(-gamepad1.left_stick_y, 3),
-                        Math.pow(gamepad1.right_stick_x, 3));
+                mechanum.setDrivePowers(
+                        new PoseVelocity2d(new Vector2d(
+                                Math.pow(gamepad1.left_stick_x, 3),
+                                Math.pow(-gamepad1.left_stick_y, 3)),
+                                Math.pow(gamepad1.right_stick_x, 3)));
             }
 
             arm.moveToPose(armState);
