@@ -9,7 +9,6 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @Config
 public class Mechanum {
-
     double botHeading;
     double headingOffset = 0;
     DcMotor frontLeftMotor;

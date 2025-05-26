@@ -11,25 +11,28 @@ public class parkAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        // Subsystems
         Arm arm = new Arm(hardwareMap);
         Claw claw = new Claw(hardwareMap);
         Mechanum mechanum = new Mechanum(hardwareMap);
 
+        // Time running
         ElapsedTime elapsedTime = new ElapsedTime();
 
         claw.closeClaw();
 
         waitForStart();
 
+        // Reset the time
         elapsedTime.reset();
 
         while(opModeIsActive()) {
+
+            // Go to parking station
             if(elapsedTime.seconds() < 3){
                 mechanum.drive(0.5,-0.1,0);
             }
-
-//            arm.moveToPose(Arm.ClosedArm);
-//            elevator.moveToPose(Elevator.ClosedElevator);
         }
     }
 

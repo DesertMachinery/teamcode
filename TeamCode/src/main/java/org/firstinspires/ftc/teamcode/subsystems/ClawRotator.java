@@ -5,11 +5,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
-public class Elbow {
-    private final DcMotorEx elbowMotor;
+public class ClawRotator {
+    private final DcMotorEx clawRotatorMotor;
 
     // Positions
     public static double collectSample = 0.72;
@@ -18,13 +19,14 @@ public class Elbow {
     public static double scoreSpecimen = 0.13;
     public static double elbowLowBasket = 0.68;
     public static double closedElbow = 0.1;
-    private final double maxPose = 1500;
-    private static double maxSpeed = 1;
+    private final double maxPose = 1700;
 
     // PID Parameters
-    public static double KP = 0.05;
+    public static double KP = 0.0573;
     public static double KI = 0;
-    public static double KD = 0.001;
+    public static double KD = 0.00085;
+    public static double maxSpeed = 1;
+    public static double maxReverseSpeed = 1;
     double lastPose = 0;
     double lastError = 0;
     double integralSum = 0;
@@ -34,17 +36,17 @@ public class Elbow {
     // Timer
     ElapsedTime timer = new ElapsedTime();
 
-    public Elbow(HardwareMap hardwareMap) {
-        elbowMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "Elbow");
+    public ClawRotator(HardwareMap hardwareMap) {
+        clawRotatorMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "ClawRotator");
 
-        elbowMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        elbowMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        elbowMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        clawRotatorMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        clawRotatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        clawRotatorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @SuppressWarnings("unused")
     public void setPower(double power) {
-        elbowMotor.setPower(power);
+        clawRotatorMotor.setPower(power);
     }
 
     public void moveToPose(double pose) {
@@ -57,7 +59,7 @@ public class Elbow {
         pose *= maxPose;
 
         // Obtain the encoder position
-        double encoderPosition = elbowMotor.getCurrentPosition();
+        double encoderPosition = clawRotatorMotor.getCurrentPosition();
 
         // Calculate the error
         error = pose - encoderPosition;
@@ -76,14 +78,13 @@ public class Elbow {
         if (out < -maxSpeed){
             out = -maxSpeed;
         }
-
-        elbowMotor.setPower(out);
+        clawRotatorMotor.setPower(out);
 
         lastError = error;
         timer.reset();
     }
 
-    public double getElbowPose() {
-        return elbowMotor.getCurrentPosition() / maxPose;
+    public double getPose() {
+        return clawRotatorMotor.getCurrentPosition() / maxPose;
     }
 }

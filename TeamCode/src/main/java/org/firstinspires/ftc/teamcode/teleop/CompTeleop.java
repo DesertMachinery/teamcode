@@ -16,39 +16,47 @@ public class CompTeleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+        // Subsystems
         Mechanum mechanum = new Mechanum(hardwareMap);
         Claw claw = new Claw(hardwareMap);
         Arm arm = new Arm(hardwareMap);
         Elbow elbow = new Elbow(hardwareMap);
 
+        // Start positions
         double armState = 0;
         double elbowState = 0;
         double wristState = 0;
 
+        // Toggles
         boolean clawToggle = true;
         boolean collectToggle = true;
         boolean prepCollectToggle = false;
-
-        ElapsedTime collectTimer = new ElapsedTime();
-        ElapsedTime goDownTimer = new ElapsedTime();
-
         boolean prepareCollectDebounce = true;
         boolean goDown = false;
 
+        // Timers
+        ElapsedTime collectTimer = new ElapsedTime();
+        ElapsedTime goDownTimer = new ElapsedTime();
+
+
+        // Telemetry
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         claw.closeClaw();
 
+        // Init mode
         waitForStart();
 
+        // Start
         while (opModeIsActive()) {
 
+            // Rotation reset
             if (gamepad1.options) {
                 mechanum.resetRotation();
             }
 
-            // prepare collect
+            // Prepare collect sample
             if (gamepad1.dpad_up && armState!= Arm.prepCollectSample){
                 armState = Arm.goDownPose;
                 elbowState = Elbow.collectSample;
@@ -60,7 +68,7 @@ public class CompTeleop extends LinearOpMode {
                 prepCollectToggle = false;
             }
 
-            //collect
+            // Collect sample
             if (gamepad1.dpad_down) {
                 if(collectToggle){
                     collectToggle = false;
@@ -81,7 +89,7 @@ public class CompTeleop extends LinearOpMode {
                 }
             }
 
-            //open/close claw
+            // Open/close claw
             if (gamepad1.circle) {
                 if (clawToggle) {
                     clawToggle = false;
@@ -96,31 +104,37 @@ public class CompTeleop extends LinearOpMode {
                 clawToggle = true;
             }
 
+            // Score sample on low basket
             if (gamepad1.cross) {
                 armState = Arm.armLowBasket;
                 elbowState = Elbow.elbowLowBasket;
             }
 
+            // Prepare specimen for score
             if (gamepad1.left_bumper) {
                 armState = Arm.prepSpec;
                 elbowState = Elbow.prepSpec;
             }
 
+            // Score specimen
             if (gamepad1.left_trigger > 0.05) {
                 armState = Arm.scoreSpec;
                 elbowState = Elbow.scoreSpecimen;
             }
 
+            // Collect specimen
             if(gamepad1.right_bumper){
                 armState = Arm.collectSpecimen;
                 elbowState = Elbow.collectSpecimen;
             }
 
+            // Emergency reset
             if(gamepad1.square){
                 armState = -100;
                 elbowState = -100;
             }
 
+            // Slow driving
             if (gamepad1.right_trigger > 0.05) {
                 mechanum.drive(
                         Math.pow(gamepad1.left_stick_x, 3) * 0.25,
@@ -137,6 +151,7 @@ public class CompTeleop extends LinearOpMode {
             arm.moveToPose(armState);
             elbow.moveToPose(elbowState);
 
+            // Telemetry Data
             FtcDashboard.getInstance().getTelemetry().addData("arm state", armState);
             FtcDashboard.getInstance().getTelemetry().addData("elbow state", elbowState);
             FtcDashboard.getInstance().getTelemetry().addData("arm pose", arm.getArmPose());

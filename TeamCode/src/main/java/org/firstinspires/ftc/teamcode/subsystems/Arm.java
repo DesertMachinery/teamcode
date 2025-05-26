@@ -10,43 +10,38 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Arm {
     private final DcMotorEx armMotor;
 
+    // Positions
     public static double prepCollectSample = 0.833;
     public static double goDownPose = 0.75;
     public static double collectSample = 0.88;
     public static double postCollectSample = 0.8;
-
-
     public static double ClosedArm = 0.1;
-
     public static double collectSpecimen = 0.49;
     public static double prepSpec = 0.19;
     public static double scoreSpec = 0.27;
-
     public static double armLowBasket = 0.39;
+    private final double maxPose = 1745;
+    public static double maxSpeed = 1;
 
-    public static double KP = 0.025;
+    // PID Parameters
+    public static double KP = 0.01;
     public static double KI = 0;
-    public static double KD = 0.0004;
-
-
-
-
-    private final double maxPose = 1000;
-
-    ElapsedTime timer = new ElapsedTime();
+    public static double KD = 0.0005;
     double lastPose = 0;
     double lastError = 0;
     double integralSum = 0;
 
+    // Timer
+    ElapsedTime timer = new ElapsedTime();
+
     public Arm(HardwareMap hardwareMap) {
         armMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "Arm");
 
-        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    @SuppressWarnings("unused")
     public void setPower(double power){
         armMotor.setPower(power);
     }
@@ -59,27 +54,25 @@ public class Arm {
 
         pose *= maxPose;
 
-        // obtain the encoder position
+        // Obtain the encoder position
         double encoderPosition = armMotor.getCurrentPosition();
 
-        // calculate the error
+        // Calculate the error
         double error = pose - encoderPosition;
 
         double derivative = (error - lastError) / timer.seconds();
 
-        // sum of all error over time
+        // Sum of all error over time
         integralSum = integralSum + (error * timer.seconds());
 
         double out = (KP * error) + (KI * integralSum) + (KD * derivative);
 
-        if(out > 0.6){
-            out = 0.6;
-
-
+        if(out > maxSpeed){
+            out = maxSpeed;
         }
 
-        if (out < -0.6){
-            out = -0.6;
+        if (out < -maxSpeed){
+            out = -maxSpeed;
         }
 
         armMotor.setPower(out);

@@ -12,12 +12,14 @@ public class specimenAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        // Subsystems
         Arm arm = new Arm(hardwareMap);
         Claw claw = new Claw(hardwareMap);
         Mechanum mechanum = new Mechanum(hardwareMap);
         Elbow elbow = new Elbow(hardwareMap);
 
-
+        // Time running
         ElapsedTime elapsedTime = new ElapsedTime();
 
         claw.closeClaw();
@@ -27,6 +29,7 @@ public class specimenAuto extends LinearOpMode {
 
         elapsedTime.reset();
 
+        // Prepare arms
         while(elapsedTime.seconds() < 0.5) {
 
             arm.moveToPose(Arm.prepSpec);
@@ -35,6 +38,7 @@ public class specimenAuto extends LinearOpMode {
         }
 
         elapsedTime.reset();
+        // Go to bar
         while (elapsedTime.seconds()<4){
             mechanum.drive(0, 0.3, 0);
             arm.moveToPose(Arm.prepSpec);
@@ -45,6 +49,8 @@ public class specimenAuto extends LinearOpMode {
         mechanum.stop();
 
         elapsedTime.reset();
+
+        //Score sample
         while (elapsedTime.seconds() < 0.5){
             arm.moveToPose(Arm.scoreSpec);
             elbow.moveToPose(Elbow.scoreSpecimen);
