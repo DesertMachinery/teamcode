@@ -23,7 +23,7 @@ public class sampleAuto extends LinearOpMode {
         Claw claw = new Claw(hardwareMap);
         Mechanum mechanum = new Mechanum(hardwareMap);
         Elbow elbow = new Elbow(hardwareMap);
-
+        ClawRotator clawRotator = new ClawRotator(hardwareMap);
         // Time running
         ElapsedTime elapsedTime = new ElapsedTime();
 
@@ -39,6 +39,7 @@ public class sampleAuto extends LinearOpMode {
 
             arm.moveToPose(Arm.armLowBasket);
             elbow.moveToPose(Elbow.elbowLowBasket);
+            clawRotator.moveToPose(ClawRotator.rotatorLowBasket);
             opModeIsActive();
 
             Action tea =
@@ -58,6 +59,7 @@ public class sampleAuto extends LinearOpMode {
             mechanum.drive(0, 0.3, 0);
             arm.moveToPose(Arm.armLowBasket);
             elbow.moveToPose(Elbow.elbowLowBasket);
+            clawRotator.moveToPose(ClawRotator.rotatorLowBasket);
             opModeIsActive();
         }
 
@@ -70,6 +72,7 @@ public class sampleAuto extends LinearOpMode {
         while (elapsedTime.seconds() < 0.5){
             arm.moveToPose(Arm.armLowBasket);
             elbow.moveToPose(Elbow.elbowLowBasket);
+            clawRotator.moveToPose(ClawRotator.rotatorLowBasket);
             claw.openClaw();
             opModeIsActive();
         }
@@ -85,6 +88,7 @@ public class sampleAuto extends LinearOpMode {
             mechanum.drive(0, -0.3, 0);
             arm.moveToPose(Arm.armLowBasket);
             elbow.moveToPose(Elbow.elbowLowBasket);
+            clawRotator.moveToPose(ClawRotator.rotatorLowBasket);
             opModeIsActive();
         }
         mechanum.stop();
@@ -94,6 +98,7 @@ public class sampleAuto extends LinearOpMode {
         while (elapsedTime.seconds() < 0.2){
             arm.moveToPose(Arm.ClosedArm);
             elbow.moveToPose(Elbow.closedElbow);
+            clawRotator.moveToPose(ClawRotator.closedRotator);
             opModeIsActive();
         }
 

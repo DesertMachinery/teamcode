@@ -18,7 +18,7 @@ public class specimenAuto extends LinearOpMode {
         Claw claw = new Claw(hardwareMap);
         Mechanum mechanum = new Mechanum(hardwareMap);
         Elbow elbow = new Elbow(hardwareMap);
-
+        ClawRotator clawRotator = new ClawRotator(hardwareMap);
         // Time running
         ElapsedTime elapsedTime = new ElapsedTime();
 
@@ -34,6 +34,7 @@ public class specimenAuto extends LinearOpMode {
 
             arm.moveToPose(Arm.prepSpec);
             elbow.moveToPose(Elbow.prepSpec);
+            clawRotator.moveToPose(ClawRotator.prepSpec);
             opModeIsActive();
         }
 
@@ -43,6 +44,7 @@ public class specimenAuto extends LinearOpMode {
             mechanum.drive(0, 0.3, 0);
             arm.moveToPose(Arm.prepSpec);
             elbow.moveToPose(Elbow.prepSpec);
+            clawRotator.moveToPose(ClawRotator.prepSpec);
             opModeIsActive();
         }
 
@@ -54,6 +56,7 @@ public class specimenAuto extends LinearOpMode {
         while (elapsedTime.seconds() < 0.5){
             arm.moveToPose(Arm.scoreSpec);
             elbow.moveToPose(Elbow.scoreSpecimen);
+            clawRotator.moveToPose(ClawRotator.scoreSpecimen);
             opModeIsActive();
         }
 
@@ -66,6 +69,7 @@ public class specimenAuto extends LinearOpMode {
         while (elapsedTime.seconds() < 0.2){
             arm.moveToPose(Arm.ClosedArm);
             elbow.moveToPose(Elbow.closedElbow);
+            clawRotator.moveToPose(ClawRotator.closedRotator);
             opModeIsActive();
         }
 

@@ -11,22 +11,22 @@ public class Arm {
     private final DcMotorEx armMotor;
 
     // Positions
-    public static double prepCollectSample = 0.833;
+    public static double prepCollectSample = 0.9140401146131805;
     public static double goDownPose = 0.75;
-    public static double collectSample = 0.88;
+    public static double collectSample = 0.9512893982808023;
     public static double postCollectSample = 0.8;
     public static double ClosedArm = 0.1;
     public static double collectSpecimen = 0.49;
     public static double prepSpec = 0.19;
     public static double scoreSpec = 0.27;
-    public static double armLowBasket = 0.39;
-    private final double maxPose = 1745;
+    public static double armLowBasket = 0.4349570200573066;
+    public static double maxPose = 1745;
     public static double maxSpeed = 1;
 
     // PID Parameters
     public static double KP = 0.01;
     public static double KI = 0;
-    public static double KD = 0.0005;
+    public static double KD = 0.0002;
     double lastPose = 0;
     double lastError = 0;
     double integralSum = 0;
@@ -64,6 +64,8 @@ public class Arm {
 
         // Sum of all error over time
         integralSum = integralSum + (error * timer.seconds());
+
+
 
         double out = (KP * error) + (KI * integralSum) + (KD * derivative);
 

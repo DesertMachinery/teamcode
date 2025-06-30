@@ -12,11 +12,11 @@ public class Elbow {
     private final DcMotorEx elbowMotor;
 
     // Positions
-    public static double collectSample = 0.72;
-    public static double collectSpecimen = 0.0421;
+    public static double collectSample =  0.6093333333333333;
+    public static double collectSpecimen = 0.6093333333333333;
     public static double prepSpec = 0.3;
     public static double scoreSpecimen = 0.13;
-    public static double elbowLowBasket = 0.68;
+    public static double elbowLowBasket = 0.624;
     public static double closedElbow = 0.1;
     private final double maxPose = 1500;
     private static double maxSpeed = 1;
@@ -24,7 +24,7 @@ public class Elbow {
     // PID Parameters
     public static double KP = 0.05;
     public static double KI = 0;
-    public static double KD = 0.001;
+    public static double KD = 0.0002;
     double lastPose = 0;
     double lastError = 0;
     double integralSum = 0;

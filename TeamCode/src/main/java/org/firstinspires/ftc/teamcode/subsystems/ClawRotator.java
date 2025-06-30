@@ -13,18 +13,18 @@ public class ClawRotator {
     private final DcMotorEx clawRotatorMotor;
 
     // Positions
-    public static double collectSample = 0.72;
+    public static double collectSample = 0.11764705882352941;
     public static double collectSpecimen = 0.0421;
     public static double prepSpec = 0.3;
     public static double scoreSpecimen = 0.13;
-    public static double elbowLowBasket = 0.68;
-    public static double closedElbow = 0.1;
+    public static double rotatorLowBasket = 0.09529411764705882;
+    public static double closedRotator = 0.1;
     private final double maxPose = 1700;
 
     // PID Parameters
-    public static double KP = 0.0573;
+    public static double KP = 0.0058;
     public static double KI = 0;
-    public static double KD = 0.00085;
+    public static double KD = 0;
     public static double maxSpeed = 1;
     public static double maxReverseSpeed = 1;
     double lastPose = 0;
